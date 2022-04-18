@@ -1,9 +1,44 @@
+import { useState } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import { Button, Col, Container, Form, FormGroup, FormText, Input, Label, Row, Tooltip, UncontrolledTooltip } from 'reactstrap'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
+
+  const [values, setValues] = useState({
+    name: '',
+    email: '',
+    country: '',
+    image: '',
+    iyanju: ''
+  })
+
+  const valueChange = e => {
+    setValues({ ...values, [e.target.name]: e.target.value })
+  }
+
+  const submission = e => {
+    const url = 'http://localhost:8000/api/submission';
+    const requestMetadata = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(values)
+    };
+
+    fetch(url, requestMetadata)
+      .then(res => res.json())
+      .then(recipes => {
+        this.setState({ recipes });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+    e.preventDefault();
+  }
   return (
     <div>
       <Head>
@@ -83,38 +118,38 @@ export default function Home() {
                 <img src="/images/hero.png" alt="Iyanju" width={360} height={{}} />
               </Col>
               <Col className='d-flex flex-column justify-content-center h-full p-5'>
-                <Form action=''>
+                <Form onSubmit={submission}>
                   <Row>
                     <Col md={6}>
                       <FormGroup>
                         <Label for="name"> Display Name </Label>
-                        <Input id="name" name="name" type="text" required />
+                        <Input id="name" name="name" type="text" required onChange={valueChange} />
                       </FormGroup>
                     </Col>
                     <Col md={6}>
                       <FormGroup>
                         <Label for="country"> Country <span className='info'>- For Analytics only </span></Label>
-                        <Input id="country" name="country" type="text" required />
+                        <Input id="country" name="country" type="text" required onChange={valueChange} />
                       </FormGroup>
                     </Col>
                   </Row>
                   <FormGroup>
                     <Label for="email"> Email </Label>
-                    <Input id="email" name="email" type="email" required />
+                    <Input id="email" name="email" type="email" required onChange={valueChange} />
                   </FormGroup>
                   <FormGroup>
                     <Label for="iyanjuText"> Iyanju </Label>
-                    <Input id="iyanjuText" name="iyanjuText" type="textarea" required />
+                    <Input id="iyanjuText" name="iyanju" type="textarea" required onChange={valueChange} />
                   </FormGroup>
                   <FormGroup>
                     <Label for="image"> Image </Label>
-                    <Input id="image" name="image" type="file" />
+                    <Input id="image" name="image" type="file" required onChange={valueChange} />
                     <FormText>
                       Please select the background image you'd like to include,
                       you can easily create one on Canva.
                     </FormText>
                   </FormGroup>
-                  <Button block > Submit </Button>
+                  <Button block> Submit </Button>
                 </Form>
               </Col>
             </Row>
@@ -143,17 +178,17 @@ export default function Home() {
             </span>
             <div className="socials">
               <a href='tel:+2347014293952'>
-                <Image src="/images/socials/headset-solid.svg" alt="Phone" width={35} height={35}/>
+                <Image src="/images/socials/headset-solid.svg" alt="Phone" width={35} height={35} />
               </a>
               <a href='mailto:platinumemirate@gmail.com' target='_blank' rel="noopener noreferrer">
-                <Image src="/images/socials/square-envelope-solid.svg" alt="Email" width={35} height={35}/>
+                <Image src="/images/socials/square-envelope-solid.svg" alt="Email" width={35} height={35} />
               </a>
               <a href='https://wa.me/message/FSG3YR7TOGKEI1' target='_blank' rel="noopener noreferrer">
-                <Image src="/images/socials/whatsapp-brands.svg" alt="WhatsApp" width={35} height={35}/>
+                <Image src="/images/socials/whatsapp-brands.svg" alt="WhatsApp" width={35} height={35} />
               </a>
-              
+
               <a href='' target='_blank' rel="noopener noreferrer">
-                <Image src="/images/socials/instagram-brands.svg" alt="Instagram" width={35} height={35}/>
+                <Image src="/images/socials/instagram-brands.svg" alt="Instagram" width={35} height={35} />
               </a>
             </div>
           </footer>
@@ -161,7 +196,7 @@ export default function Home() {
             <p>
               Platinum Innovations |
               <a href='https://www.linkedin.com/in/platinum-emmanuel/' target='_blank' rel="noopener noreferrer">
-                <Image src="/images/socials/linkedin-in-brands.svg" alt="LinkedIn" width={25} height={25} className='m-1 p-1'/>
+                <Image src="/images/socials/linkedin-in-brands.svg" alt="LinkedIn" width={25} height={25} className='m-1 p-1' />
                 {' '} Emmanuel Adesina
               </a>
             </p>

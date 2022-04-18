@@ -24,7 +24,7 @@ p, .p{
   font-weight: 300 ;
 }
 .features{
-  background-color: #E6E6E640;
+  background-color: #E6E6E6;
 }
 .features .col{
   display: flex;
@@ -87,5 +87,13 @@ footer a {
   }
   .features .col{
     margin-bottom: 5vh;
+  }
+  form{
+    padding: 0;
+    border: none;
+  }
+  p, .p{
+    font-weight: 300 ;
+    padding: 2vw;
   }
 }
