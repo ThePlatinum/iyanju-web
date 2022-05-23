@@ -6,38 +6,43 @@ import styles from '../styles/Home.module.css'
 
 export default function Home() {
 
+  const BaseURL = 'http://127.0.0.1:8001'
+
   const [values, setValues] = useState({
-    name: '',
+    displayname: '',
     email: '',
     country: '',
-    image: '',
+    image: [],
     iyanju: ''
   })
 
   const valueChange = e => {
     setValues({ ...values, [e.target.name]: e.target.value })
   }
+  const addFile = e => {
+    setValues({ ...values, image: e.target.files[0] })
+    console.log(values);
+  }
 
   const submission = e => {
-    const url = 'http://localhost:8000/api/submission';
-    const requestMetadata = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(values)
-    };
-
-    fetch(url, requestMetadata)
-      .then(res => res.json())
-      .then(recipes => {
-        this.setState({ recipes });
-      })
-      .catch(error => {
-        console.error(error);
-      });
-
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('displayname', values.displayname);
+    formData.append('email', values.email);
+    formData.append('country', values.country);
+    formData.append('image', values.image);
+    formData.append('iyanju', values.iyanju);;
+
+    fetch(`${BaseURL}/api/submission`, {
+      method: 'POST',
+      body: formData
+    })
+      .then(res => res.json() )
+      .then(result => {
+        console.log('result: ', result);
+      })
+      .catch(error => console.log('error: ', error) );  
   }
   return (
     <div>
@@ -47,7 +52,7 @@ export default function Home() {
         <link rel="icon" href="/images/favicon.png" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@100;300;500&display=swap" rel="stylesheet" />
       </Head>
 
@@ -123,7 +128,7 @@ export default function Home() {
                     <Col md={6}>
                       <FormGroup>
                         <Label for="name"> Display Name </Label>
-                        <Input id="name" name="name" type="text" required onChange={valueChange} />
+                        <Input id="name" name="displayname" type="text" required onChange={valueChange} />
                       </FormGroup>
                     </Col>
                     <Col md={6}>
@@ -143,7 +148,7 @@ export default function Home() {
                   </FormGroup>
                   <FormGroup>
                     <Label for="image"> Image </Label>
-                    <Input id="image" name="image" type="file" required onChange={valueChange} />
+                    <Input id="image" name="image" type="file" required onChange={addFile.bind(this)} />
                     <FormText>
                       Please select the background image you'd like to include,
                       you can easily create one on Canva.
